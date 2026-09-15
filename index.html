@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>The Snack Catching Drop Game 🥟🌸</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    background: #ffeaf5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: #5d4050;
+}
+
+#game {
+    position: relative;
+    width: min(95vw, 900px);
+    height: min(92vh, 700px);
+    background: linear-gradient(#fff8fc 0 72%, #ffdff0 72% 100%);
+    border: 5px solid #f3a9cc;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 12px 35px rgba(190, 105, 150, .25);
+}
+
+/* CLOUDS */
+
+.cloud {
+    position: absolute;
+    font-size: 35px;
+    opacity: .6;
+    z-index: 1;
+}
+
+.cloud1 {
+    top: 12%;
+    left: 8%;
+}
+
+.cloud2 {
+    top: 18%;
+    right: 10%;
+}
+
+/* FLOWERS */
+
+.flower {
+    position: absolute;
+    font-size: 24px;
+    z-index: 1;
+}
+
+.flower1 {
+    bottom: 8%;
+    left: 8%;
+}
+
+.flower2 {
+    bottom: 11%;
+    right: 9%;
+}
+
+/* TOP BAR */
+
+#topBar {
+    position: absolute;
+    top: 12px;
+    left: 18px;
+    right: 18px;
+    height: 55px;
+
+    background: rgba(255,255,255,.9);
+    border: 3px solid #f3b4d1;
+    border-radius: 18px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 18px;
+    z-index: 50;
+
+    box-shadow: 0 5px 15px rgba(180,100,140,.12);
+}
+
+#title {
+    font-weight: bold;
+    font-size: 18px;
+    color: #a84d7d;
+}
+
+#score {
+    font-weight: bold;
+    font-size: 18px;
+    color: #d56a9c;
+}
+
+/* GAME AREA */
+
+#gameArea {
+    position: absolute;
+    top: 75px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/* CAT */
+
+#cat {
+    position: absolute;
+
+    left: -130px;
+    bottom: 27%;
+
+    font-size: 80px;
+
+    z-index: 15;
+
+    transition: left 1.2s ease;
+
+    filter: drop-shadow(0 4px 2px rgba(0,0,0,.08));
+}
+
+/* BUNNY */
+
+#bunny {
+    position: absolute;
+
+    bottom: 12%;
+    left: 50%;
+
+    width: 130px;
+
+    transform: translateX(-50%);
+
+    transition: left .08s linear;
+
+    z-index: 20;
+
+    text-align: center;
+}
+
+#bunnyCharacter {
+    font-size: 85px;
+    line-height: 1;
+
+    filter: drop-shadow(0 5px 2px rgba(0,0,0,.08));
+}
+
+/* BASKET */
+
+#basket {
+    font-size: 65px;
+    line-height: .8;
+    margin-top: -2px;
+
+    filter: drop-shadow(0 4px 2px rgba(0,0,0,.08));
+}
+
+/* SNACKS */
+
+.snack {
+    position: absolute;
+
+    font-size: 42px;
+
+    z-index: 10;
+
+    user-select: none;
+    pointer-events: none;
+
+    filter: drop-shadow(0 4px 2px rgba(0,0,0,.08));
+}
+
+/* DIALOGUE */
+
+#dialogueBox {
+    position: absolute;
+
+    left: 50%;
+    bottom: 23%;
+
+    transform: translateX(-50%);
+
+    width: min(90%, 600px);
+
+    background: rgba(255,255,255,.97);
+
+    border: 4px solid #efa7ca;
+    border-radius: 24px;
+
+    padding: 20px;
+
+    text-align: center;
+
+    z-index: 100;
+
+    box-shadow: 0 10px 30px rgba(170,90,130,.2);
+
+    display: none;
+}
+
+#speaker {
+    font-size: 18px;
+    font-weight: bold;
+    color: #bd5f91;
+    margin-bottom: 8px;
+}
+
+#dialogueText {
+    font-size: 19px;
+    line-height: 1.5;
+}
+
+#nextButton {
+    margin-top: 15px;
+
+    border: 0;
+    border-radius: 15px;
+
+    background: #ef91bb;
+    color: white;
+
+    padding: 10px 24px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+#nextButton:hover {
+    background: #df76a7;
+}
+
+/* CONTROLS */
+
+#controls {
+    position: absolute;
+
+    bottom: 13px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    gap: 18px;
+
+    z-index: 70;
+}
+
+.controlButton {
+    width: 75px;
+    height: 55px;
+
+    border: 3px solid #e999bd;
+    border-radius: 18px;
+
+    background: #fff;
+    color: #bd5f91;
+
+    font-size: 28px;
+    font-weight: bold;
+
+    box-shadow: 0 5px 10px rgba(180,100,140,.15);
+
+    cursor: pointer;
+}
+
+.controlButton:active {
+    transform: scale(.92);
+    background: #fff0f7;
+}
+
+/* HINT */
+
+#hint {
+    position: absolute;
+
+    bottom: 82px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: rgba(255,255,255,.8);
+
+    border-radius: 12px;
+
+    padding: 6px 13px;
+
+    font-size: 13px;
+    color: #9a647e;
+
+    z-index: 60;
+}
+
+/* BUNNY BOUNCE */
+
+.bounce {
+    animation: bounce .35s ease;
+}
+
+@keyframes bounce {
+
+    0% {
+        transform:
+            translateX(-50%)
+            translateY(0);
+    }
+
+    40% {
+        transform:
+            translateX(-50%)
+            translateY(-28px);
+    }
+
+    100% {
+        transform:
+            translateX(-50%)
+            translateY(0);
+    }
+}
+
+/* WIN SCREEN */
+
+#winScreen {
+    position: absolute;
+
+    inset: 0;
+
+    background: rgba(255,239,248,.97);
+
+    z-index: 200;
+
+    display: none;
+
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 25px;
+}
+
+#winCard {
+    width: min(90%, 570px);
+
+    background: white;
+
+    border: 5px solid #efa7ca;
+    border-radius: 30px;
+
+    padding: 35px 25px;
+
+    box-shadow: 0 12px 30px rgba(170,90,130,.2);
+}
+
+#winCard h1 {
+    margin: 0 0 12px;
+
+    color: #d85e96;
+
+    font-size: 38px;
+}
+
+#winCard p {
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+#dateQuestion {
+    font-size: 22px;
+
+    font-weight: bold;
+
+    color: #c55389;
+
+    margin: 20px 0;
+}
+
+.answerButton {
+    border: 0;
+
+    border-radius: 15px;
+
+    padding: 12px 25px;
+
+    margin: 6px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+#yesButton {
+    background: #ef91bb;
+    color: white;
+}
+
+#noButton {
+    background: #f4d7e5;
+    color: #80566b;
+}
+
+#answer {
+    min-height: 50px;
+
+    margin-top: 20px;
+
+    font-size: 19px;
+
+    line-height: 1.5;
+
+    color: #a64e7b;
+}
+
+#restartButton {
+    margin-top: 18px;
+
+    padding: 10px 22px;
+
+    border: 0;
+    border-radius: 14px;
+
+    background: #d76a9d;
+    color: white;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    #game {
+        width: 96vw;
+        height: 94vh;
+        border-radius: 22px;
+    }
+
+    #title,
+    #score {
+        font-size: 14px;
+    }
+
+    #cat {
+        font-size: 62px;
+    }
+
+    /* MOVES BUNNY HIGHER ON PHONES */
+
+    #bunny {
+        bottom: 17%;
+    }
+
+    #bunnyCharacter {
+        font-size: 70px;
+    }
+
+    #basket {
+        font-size: 55px;
+    }
+
+    .snack {
+        font-size: 35px;
+    }
+
+    #dialogueText {
+        font-size: 16px;
+    }
+
+    #winCard h1 {
+        font-size: 30px;
+    }
+
+    #winCard p,
+    #dateQuestion {
+        font-size: 18px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+    <div id="topBar">
+
+        <div id="title">
+            🥟 Snack Catching Drop Game 🌸
+        </div>
+
+        <div id="score">
+            Snacks: 0 / 10
+        </div>
+
+    </div>
+
+    <div id="gameArea">
+
+        <div class="cloud cloud1">
+            ☁️
+        </div>
+
+        <div class="cloud cloud2">
+            ☁️
+        </div>
+
+        <div class="flower flower1">
+            🌸
+        </div>
+
+        <div class="flower flower2">
+            🌷
+        </div>
+
+        <div id="cat">
+            🐈
+        </div>
+
+        <div id="bunny">
+
+            <div id="bunnyCharacter">
+                🐇
+            </div>
+
+            <div id="basket">
+                🧺
+            </div>
+
+        </div>
+
+        <div id="dialogueBox">
+
+            <div id="speaker">
+                Cat:
+            </div>
+
+            <div id="dialogueText"></div>
+
+            <button id="nextButton">
+                Next 💗
+            </button>
+
+        </div>
+
+        <div id="hint">
+            Use the buttons or arrow keys!
+        </div>
+
+        <div id="controls">
+
+            <button
+                class="controlButton"
+                id="leftButton"
+            >
+                ←
+            </button>
+
+            <button
+                class="controlButton"
+                id="rightButton"
+            >
+                →
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="winScreen">
+
+        <div id="winCard">
+
+            <h1>
+                🌸 YOU WON! 🌸
+            </h1>
+
+            <p>
+                🥟 10 snacks caught! 🥟
+            </p>
+
+            <p>
+                Now for the real question...
+            </p>
+
+            <div id="dateQuestion">
+                wanna go on a date with me? 🐇🍓
+            </div>
+
+            <button
+                class="answerButton"
+                id="yesButton"
+            >
+                🍡 YES
+            </button>
+
+            <button
+                class="answerButton"
+                id="noButton"
+            >
+                🍣 NO
+            </button>
+
+            <div id="answer"></div>
+
+            <button id="restartButton">
+                Play Again 🌸
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+/* GET ELEMENTS */
+
+const gameArea =
+    document.getElementById("gameArea");
+
+const bunny =
+    document.getElementById("bunny");
+
+const cat =
+    document.getElementById("cat");
+
+const dialogueBox =
+    document.getElementById("dialogueBox");
+
+const dialogueText =
+    document.getElementById("dialogueText");
+
+const speaker =
+    document.getElementById("speaker");
+
+const nextButton =
+    document.getElementById("nextButton");
+
+const scoreText =
+    document.getElementById("score");
+
+const winScreen =
+    document.getElementById("winScreen");
+
+const yesButton =
+    document.getElementById("yesButton");
+
+const noButton =
+    document.getElementById("noButton");
+
+const answer =
+    document.getElementById("answer");
+
+const restartButton =
+    document.getElementById("restartButton");
+
+
+/* GAME VARIABLES */
+
+let bunnyPosition = 50;
+
+let score = 0;
+
+let playing = false;
+
+let dialogueOpen = false;
+
+let lastTime = 0;
+
+let spawnTimer = 0;
+
+let snacks = [];
+
+
+const snackTypes = [
+    "🍣",
+    "🍡",
+    "🥟"
+];
+
+
+const reactions = [
+    "Nice catch! ✨",
+    "One more!",
+    "You're doing great, Bunny!",
+    "Keep going! 🌸"
+];
+
+
+/* MOVE BUNNY */
+
+function moveBunny(direction) {
+
+    if (!playing || dialogueOpen) {
+        return;
+    }
+
+    bunnyPosition += direction * 5;
+
+    bunnyPosition =
+        Math.max(
+            8,
+            Math.min(
+                92,
+                bunnyPosition
+            )
+        );
+
+    bunny.style.left =
+        bunnyPosition + "%";
+}
+
+
+/* SHOW DIALOGUE */
+
+function showDialogue(
+    character,
+    text,
+    callback
+) {
+
+    dialogueOpen = true;
+
+    playing = false;
+
+    speaker.textContent =
+        character + ":";
+
+    dialogueText.textContent =
+        text;
+
+    dialogueBox.style.display =
+        "block";
+
+    nextButton.onclick = function() {
+
+        dialogueBox.style.display =
+            "none";
+
+        dialogueOpen = false;
+
+        if (callback) {
+            callback();
+        }
+
+    };
+}
+
+
+/* INTRO */
+
+function intro() {
+
+    playing = false;
+
+    dialogueOpen = false;
+
+    score = 0;
+
+    scoreText.textContent =
+        "Snacks: 0 / 10";
+
+    bunnyPosition = 50;
+
+    bunny.style.left =
+        "50%";
+
+    cat.style.left =
+        "-130px";
+
+    cat.style.display =
+        "block";
+
+    setTimeout(function() {
+
+        cat.style.left =
+            "40%";
+
+        setTimeout(function() {
+
+            showDialogue(
+                "Cat",
+                "Hey Bunny! I need your help! Can you catch all the yummy snacks?",
+                function() {
+
+                    showDialogue(
+                        "Bunny",
+                        "… 👀",
+                        function() {
+
+                            showDialogue(
+                                "Cat",
+                                "Use the left and right buttons to move your basket. Catch 10 snacks to win!",
+                                function() {
+
+                                    showDialogue(
+                                        "Cat",
+                                        "Ready? Let's go! 🥟✨",
+                                        function() {
+
+                                            cat.style.left =
+                                                "-130px";
+
+                                            setTimeout(
+                                                function() {
+
+                                                    cat.style.display =
+                                                        "none";
+
+                                                    startGame();
+
+                                                },
+                                                1000
+                                            );
+
+                                        }
+                                    );
+
+                                }
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+        }, 1200);
+
+    }, 500);
+}
+
+
+/* START GAME */
+
+function startGame() {
+
+    score = 0;
+
+    scoreText.textContent =
+        "Snacks: 0 / 10";
+
+    bunnyPosition = 50;
+
+    bunny.style.left =
+        "50%";
+
+    playing = true;
+
+    dialogueOpen = false;
+
+    lastTime =
+        performance.now();
+
+    spawnTimer = 0;
+
+    snacks.forEach(function(snack) {
+
+        if (snack.element) {
+            snack.element.remove();
+        }
+
+    });
+
+    snacks = [];
+
+    requestAnimationFrame(
+        gameLoop
+    );
+}
+
+
+/* CREATE SNACK */
+
+function createSnack() {
+
+    if (!playing) {
+        return;
+    }
+
+    const snack =
+        document.createElement("div");
+
+    snack.className =
+        "snack";
+
+    snack.textContent =
+        snackTypes[
+            Math.floor(
+                Math.random() *
+                snackTypes.length
+            )
+        ];
+
+    snack.style.left =
+        (
+            7 +
+            Math.random() * 86
+        ) + "%";
+
+    snack.style.top =
+        "-50px";
+
+    gameArea.appendChild(
+        snack
+    );
+
+    snacks.push({
+
+        element: snack,
+
+        speed:
+            130 +
+            Math.random() * 80
+
+    });
+}
+
+
+/* UPDATE SNACKS */
+
+function updateSnacks(deltaTime) {
+
+    const areaRect =
+        gameArea.getBoundingClientRect();
+
+    const bunnyRect =
+        bunny.getBoundingClientRect();
+
+    for (
+        let i = snacks.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const snack =
+            snacks[i];
+
+        if (
+            !snack.element.parentElement
+        ) {
+
+            snacks.splice(i, 1);
+
+            continue;
+        }
+
+        const currentTop =
+            parseFloat(
+                snack.element.style.top
+            ) || 0;
+
+        const newTop =
+            currentTop +
+            snack.speed *
+            deltaTime;
+
+        snack.element.style.top =
+            newTop + "px";
+
+        const snackRect =
+            snack.element.getBoundingClientRect();
+
+        if (
+
+            snackRect.bottom >=
+            bunnyRect.top &&
+
+            snackRect.left <
+            bunnyRect.right &&
+
+            snackRect.right >
+            bunnyRect.left &&
+
+            snackRect.top <
+            bunnyRect.bottom
+
+        ) {
+
+            catchSnack(i);
+
+            continue;
+        }
+
+        if (
+            newTop >
+            areaRect.height + 70
+        ) {
+
+            snack.element.remove();
+
+            snacks.splice(i, 1);
+        }
+    }
+}
+
+
+/* CATCH SNACK */
+
+function catchSnack(index) {
+
+    const snack =
+        snacks[index];
+
+    if (!snack) {
+        return;
+    }
+
+    snack.element.remove();
+
+    snacks.splice(
+        index,
+        1
+    );
+
+    score++;
+
+    scoreText.textContent =
+        "Snacks: " +
+        score +
+        " / 10";
+
+    bunny.classList.remove(
+        "bounce"
+    );
+
+    void bunny.offsetWidth;
+
+    bunny.classList.add(
+        "bounce"
+    );
+
+    if (score >= 10) {
+
+        playing = false;
+
+        setTimeout(
+            function() {
+
+                showWinScreen();
+
+            },
+            400
+        );
+
+        return;
+    }
+
+    if (score % 3 === 0) {
+
+        playing = false;
+
+        showDialogue(
+            "Cat",
+            reactions[
+                Math.floor(
+                    Math.random() *
+                    reactions.length
+                )
+            ],
+            function() {
+
+                cat.style.display =
+                    "none";
+
+                playing = true;
+
+                lastTime =
+                    performance.now();
+
+                requestAnimationFrame(
+                    gameLoop
+                );
+
+            }
+        );
+    }
+}
+
+
+/* GAME LOOP */
+
+function gameLoop(time) {
+
+    if (!playing) {
+        return;
+    }
+
+    const deltaTime =
+        Math.min(
+            (time - lastTime) / 1000,
+            0.05
+        );
+
+    lastTime = time;
+
+    spawnTimer +=
+        deltaTime;
+
+    if (spawnTimer >= 0.8) {
+
+        spawnTimer = 0;
+
+        createSnack();
+    }
+
+    updateSnacks(
+        deltaTime
+    );
+
+    requestAnimationFrame(
+        gameLoop
+    );
+}
+
+
+/* WIN SCREEN */
+
+function showWinScreen() {
+
+    playing = false;
+
+    cat.style.display =
+        "none";
+
+    snacks.forEach(
+        function(snack) {
+
+            if (snack.element) {
+                snack.element.remove();
+            }
+
+        }
+    );
+
+    snacks = [];
+
+    setTimeout(
+        function() {
+
+            winScreen.style.display =
+                "flex";
+
+        },
+        500
+    );
+}
+
+
+/* LEFT BUTTON */
+
+document
+    .getElementById("leftButton")
+    .addEventListener(
+        "pointerdown",
+        function(event) {
+
+            event.preventDefault();
+
+            moveBunny(-1);
+
+        }
+    );
+
+
+/* RIGHT BUTTON */
+
+document
+    .getElementById("rightButton")
+    .addEventListener(
+        "pointerdown",
+        function(event) {
+
+            event.preventDefault();
+
+            moveBunny(1);
+
+        }
+    );
+
+
+/* KEYBOARD */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "ArrowLeft" ||
+            event.key.toLowerCase() === "a"
+        ) {
+
+            event.preventDefault();
+
+            moveBunny(-1);
+        }
+
+        if (
+            event.key === "ArrowRight" ||
+            event.key.toLowerCase() === "d"
+        ) {
+
+            event.preventDefault();
+
+            moveBunny(1);
+        }
+
+    }
+);
+
+
+/* YES */
+
+yesButton.addEventListener(
+    "click",
+    function() {
+
+        answer.innerHTML =
+            "Yay!! Date accepted!<br>" +
+            "Text me for the details—I promise " +
+            "it's going to be so much fun! 💗";
+
+        yesButton.style.display =
+            "none";
+
+        noButton.style.display =
+            "none";
+
+    }
+);
+
+
+/* NO */
+
+noButton.addEventListener(
+    "click",
+    function() {
+
+        answer.textContent =
+            "aww okay! no hard feelings at all I still think you’re pretty cool though hopefully we can still be friends ✨🐈";
+
+        yesButton.style.display =
+            "none";
+
+        noButton.style.display =
+            "none";
+
+    }
+);
+
+
+/* PLAY AGAIN */
+
+restartButton.addEventListener(
+    "click",
+    function() {
+
+        winScreen.style.display =
+            "none";
+
+        answer.innerHTML =
+            "";
+
+        yesButton.style.display =
+            "inline-block";
+
+        noButton.style.display =
+            "inline-block";
+
+        intro();
+
+    }
+);
+
+
+/* START */
+
+intro();
+
+</script>
+
+</body>
+</html>
